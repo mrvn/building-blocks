@@ -1,2 +1,3 @@
-# building-blocks
-basic data structures and algorithms in c and c++
+# Building-Blocks
+
+Basic data structures and algorithms in c and c++.
