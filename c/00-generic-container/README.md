@@ -17,14 +17,7 @@ In a detached container the data structures control structure (Node)
 is detached from them payload (Data). The Nodes only contain a pointer
 to the data itself but no actual data.
 
-    +-Node-+    +-Node-+    +-Node-+    +-Node-+    +-Node-+
-    | next +--->| next +--->| next +--->| next +--->| next +--->
-    | data +-\  | data +-\  | data +-\  | data +-\  | data +-\
-    +------+ |  +------+ |  +------+ |  +------+ |  +------+ |
-             v           v           v           v           v
-         +-Data-+    +-Data-+    +-Data-+    +-Data-+    +-Data-+
-         | data |    | data |    | data |    | data |    | data |
-         +------+    +------+    +------+    +------+    +------+
+![Deatched container](detached1.png)
 
 Nodes are always the same size no matter how large the data is. The
 data an node points to can also be easily swapped for another. All it
@@ -33,15 +26,7 @@ problem is that this link is unidirectional. Given a Data structure
 there is no way to get the Node that points to it. Therefore you
 sometimes see links from the Data back to its Node:
 
-    +-Node-+    +-Node-+    +-Node-+    +-Node-+    +-Node-+
-    | next +--->| next +--->| next +--->| next +--->| next +--->
-    | data +-\  | data +-\  | data +-\  | data +-\  | data +-\
-    +------+ |  +------+ |  +------+ |  +------+ |  +------+ |
-       ^     v     ^     v     ^     v     ^     v     ^     v
-       | +-Data-+  | +-Data-+  | +-Data-+  | +-Data-+  | +-Data-+
-       \-+ node |  \-+ node |  \-+ node |  \-+ node |  \-+ node |
-         | data |    | data |    | data |    | data |    | data |
-         +------+    +------+    +------+    +------+    +------+
+![Deatched container with backlinks](detached2.png)
 
 Since now there are two links swapping nodes is no longer atomic and
 in a multi-threaded environment care must be taken to avoid race
@@ -60,16 +45,7 @@ A drawback of the detached container are the separate allocations. But
 why should one do 2 allocations just because there are 2 structures?
 One can just allocate a larger chunk and put both of them in there:
 
-       +--------+        +--------+        +--------+        +--------+
-       |+-Node-+|        |+-Node-+|        |+-Node-+|        |+-Node-+|
-       || next +--------->| next +--------->| next +--------->| next +---->
-    /-->| data +---\  /-->| data +---\  /-->| data +---\  /-->| data +---\
-    |  |+------+|  |  |  |+------+|  |  |  |+------+|  |  |  |+------+|  |
-    |  |+-Data-+|  |  |  |+-Data-+<--/  |  |+-Data-+<--/  |  |+-Data-+<--/
-    \---+ node |<--/  \---+ node ||     \---+ node ||     \---+ node ||
-       || data ||        || data ||        || data ||        || data ||
-       |+------+|        |+------+|        |+------+|        |+------+|
-       +--------+        +--------+        +--------+        +--------+
+![Joined container with backlinks](joined.png)
 
 This half's the number of allocations needed while still meaning that
 moving Data between Nodes is just changing 2 pointers. There will
